@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f4efe6">
+  <title>PocketMoney | Personal expense tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="app-shell">
+    <section class="auth-layout" id="authScreen">
+      <div class="brand-panel">
+        <div class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></div>
+        <div>
+          <p class="brand-name">PocketMoney</p>
+          <p class="brand-tagline">small steps, clear money</p>
+        </div>
+        <div class="brand-illustration" aria-hidden="true">
+          <div class="coin coin-one">$</div>
+          <div class="coin coin-two">$</div>
+          <div class="coin coin-three">$</div>
+          <div class="leaf leaf-one"></div>
+          <div class="leaf leaf-two"></div>
+        </div>
+        <p class="brand-note">A calmer way to keep<br>your spending in sight.</p>
+      </div>
+
+      <div class="auth-panel">
+        <div class="mobile-brand"><div class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></div><span>PocketMoney</span></div>
+        <div class="form-wrap">
+          <div class="form-heading">
+            <p class="eyebrow" id="formEyebrow">WELCOME BACK</p>
+            <h1 id="formTitle">Your money,<br><em>in focus.</em></h1>
+            <p class="form-subtitle" id="formSubtitle">Sign in to pick up where you left off.</p>
+          </div>
+
+          <form id="loginForm" class="auth-form" novalidate>
+            <label for="loginEmail">Email address</label>
+            <input id="loginEmail" name="email" type="email" maxlength="24" autocomplete="email" placeholder="johndoe@email.com">
+            <label for="loginPassword">Password</label>
+            <div class="password-field">
+              <input id="loginPassword" name="password" type="password" maxlength="16" autocomplete="current-password" placeholder="Enter your password">
+              <button class="password-toggle" type="button" data-target="loginPassword" aria-label="Show password">Show</button>
+            </div>
+            <button class="primary-button" type="submit">Log in <span aria-hidden="true">↗</span></button>
+            <p class="form-switch">New to PocketMoney? <button type="button" class="text-button" id="showSignup">Create an account</button></p>
+            <p class="demo-hint">Demo: johndoe@email.com / 12345678</p>
+          </form>
+
+          <form id="signupForm" class="auth-form hidden" novalidate>
+            <label for="signupEmail">Email address</label>
+            <input id="signupEmail" name="email" type="email" maxlength="24" autocomplete="email" placeholder="johndoe@email.com">
+            <label for="signupPassword">Password</label>
+            <div class="password-field">
+              <input id="signupPassword" name="password" type="password" maxlength="16" autocomplete="new-password" placeholder="At least 8 characters">
+              <button class="password-toggle" type="button" data-target="signupPassword" aria-label="Show password">Show</button>
+            </div>
+            <label for="confirmPassword">Confirm password</label>
+            <div class="password-field">
+              <input id="confirmPassword" name="confirmPassword" type="password" maxlength="16" autocomplete="new-password" placeholder="Repeat your password">
+              <button class="password-toggle" type="button" data-target="confirmPassword" aria-label="Show password">Show</button>
+            </div>
+            <button class="primary-button" type="submit">Create account <span aria-hidden="true">↗</span></button>
+            <p class="form-switch">Already have an account? <button type="button" class="text-button" id="showLogin">Log in</button></p>
+          </form>
+        </div>
+        <p class="footer-copy">Your financial life, made a little lighter.</p>
+      </div>
+    </section>
+
+    <section class="dashboard hidden" id="dashboardScreen">
+      <nav class="dashboard-nav"><div class="mobile-brand"><div class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></div><span>PocketMoney</span></div><div class="dashboard-nav-actions"><button id="notificationButton" class="icon-button" aria-label="Show notifications">!</button><button id="logoutButton" class="quiet-button">Log out</button></div></nav>
+      <div class="dashboard-content dashboard-wide">
+        <div class="dashboard-header"><div><p class="eyebrow">YOUR OVERVIEW</p><h2>Good morning, <span id="userName">there</span>.</h2></div><div class="avatar" id="userAvatar">JD</div></div>
+        <div class="summary-grid">
+          <article class="summary-card"><span class="summary-label">Total expenses</span><strong>$1,234.56</strong><span class="summary-meta coral-text">This cycle</span></article>
+          <article class="summary-card"><span class="summary-label">Total income</span><strong>$3,715.36</strong><span class="summary-meta green-text">All sources</span></article>
+          <article class="summary-card"><span class="summary-label">Remaining allowance</span><strong>$2,480.80</strong><span class="summary-meta green-text">After expenses</span></article>
+          <article class="summary-card"><span class="summary-label">Pending roommate bills</span><strong>$120.00</strong><span class="summary-meta yellow-text">Needs attention</span></article>
+        </div>
+        <div class="dashboard-actions">
+          <button class="action-button action-expense" id="quickExpense"><span>+</span><strong>Quick add expense</strong><small>Log a new expense</small></button>
+          <button class="action-button action-income" id="quickIncome"><span>↗</span><strong>Quick add income</strong><small>Record money in</small></button>
+          <button class="action-button action-reports" id="viewReports"><span>▥</span><strong>View reports</strong><small>Explore your trends</small></button>
+        </div>
+        <div class="section-title"><h3>Recent activity</h3><span class="cycle-label">Current cycle</span></div>
+        <div class="activity-list" id="activityList"></div>
+        <div class="pagination"><button id="previousPage" class="page-button" disabled>← Previous</button><span id="pageIndicator">Page 1 of 2</span><button id="nextPage" class="page-button">Next →</button></div>
+      </div>
+    </section>
+
+    <div class="toast" id="toast" role="alert" aria-live="polite"><span class="toast-icon">!</span><span id="toastMessage"></span></div>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
