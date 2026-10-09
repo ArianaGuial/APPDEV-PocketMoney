@@ -20,20 +20,22 @@ const dashboardNotifications = [
 
 const activityPages = [
   [
-    ['⌂', 'Home supplies', 'Today, 10:42 AM', '-$42.50', 'coral'],
-    ['↗', 'Monthly salary', 'Yesterday, 9:00 AM', '+$2,700.00', 'mint income'],
-    ['✦', 'Morning coffee', 'Yesterday, 8:15 AM', '-$5.20', 'yellow']
+    ['⌂', 'Home supplies', 'Today, 10:42 AM', '-₱42.50', 'coral'],
+    ['↗', 'Monthly salary', 'Yesterday, 9:00 AM', '+₱2,700.00', 'mint income'],
+    ['✦', 'Morning coffee', 'Yesterday, 8:15 AM', '-₱5.20', 'yellow']
   ],
   [
-    ['▣', 'Internet bill', 'Oct 06, 2:30 PM', '-$65.00', 'coral'],
-    ['↗', 'Freelance payment', 'Oct 05, 11:20 AM', '+$450.00', 'mint income'],
-    ['●', 'Grocery run', 'Oct 04, 5:45 PM', '-$84.20', 'yellow']
+    ['▣', 'Internet bill', 'Oct 06, 2:30 PM', '-₱65.00', 'coral'],
+    ['↗', 'Freelance payment', 'Oct 05, 11:20 AM', '+₱450.00', 'mint income'],
+    ['●', 'Grocery run', 'Oct 04, 5:45 PM', '-₱84.20', 'yellow']
   ]
 ];
 
 const defaultAccounts = { 'johndoe@email.com': '12345678' };
+const demoEmail = 'johndoe@email.com';
 const getAccounts = () => ({ ...defaultAccounts, ...JSON.parse(localStorage.getItem('pocketMoneyAccounts') || '{}') });
 const moneyFormat = (amount) => `₱${amount.toFixed(2)}`;
+const isDemoUser = () => currentEmail === demoEmail;
 const getExpenseKey = () => `pocketMoneyExpenses:${currentEmail}`;
 const getLoggedExpenses = () => JSON.parse(localStorage.getItem(getExpenseKey()) || '[]');
 const getTagValues = (form) => ['bills', 'food', 'transportation', 'entertainment', 'school', 'emergency'].map((name) => Number(form.elements[name].value));
@@ -71,7 +73,7 @@ const showDashboard = (email) => {
 const renderActivityPage = () => {
   const activityList = document.getElementById('activityList');
   const customActivity = loggedExpenses.flatMap((expense) => Object.entries(expense.tags).filter(([, amount]) => amount > 0).map(([tag, amount]) => ['+', tag.charAt(0).toUpperCase() + tag.slice(1), `${expense.period} log`, `-${moneyFormat(amount)}`, 'coral']));
-  const activities = [...customActivity, ...activityPages.flat()];
+  const activities = [...customActivity, ...(isDemoUser() ? activityPages.flat() : [])];
   const pageCount = Math.max(1, Math.ceil(activities.length / 3));
   activityPage = Math.min(activityPage, pageCount - 1);
   activityList.innerHTML = activities.slice(activityPage * 3, activityPage * 3 + 3).map(([icon, title, date, amount, style]) => `<div class="activity-row"><span class="activity-icon ${style.split(' ')[0]}">${icon}</span><div><strong>${title}</strong><small>${date}</small></div><b class="${style.includes('income') ? 'income' : ''}">${amount}</b></div>`).join('');
@@ -82,7 +84,11 @@ const renderActivityPage = () => {
 
 const updateExpenseSummary = () => {
   const total = loggedExpenses.reduce((sum, expense) => sum + expense.total, 0);
-  document.getElementById('totalExpenses').textContent = moneyFormat(1234.56 + total);
+  const demoValues = isDemoUser();
+  document.getElementById('totalExpenses').textContent = moneyFormat((demoValues ? 1234.56 : 0) + total);
+  document.getElementById('totalIncome').textContent = moneyFormat(demoValues ? 3715.36 : 0);
+  document.getElementById('remainingAllowance').textContent = moneyFormat(demoValues ? 2480.80 : 0);
+  document.getElementById('pendingBills').textContent = moneyFormat(demoValues ? 120 : 0);
 };
 
 const expenseModal = document.getElementById('expenseModal');
@@ -118,6 +124,7 @@ signupForm.addEventListener('submit', (event) => {
   const accounts = getAccounts();
   accounts[email] = password;
   localStorage.setItem('pocketMoneyAccounts', JSON.stringify(accounts));
+  if (email !== demoEmail) localStorage.setItem(`pocketMoneyExpenses:${email}`, '[]');
   signupForm.reset();
   setMode('login');
   showToast('Account created. You can now log in.');
